@@ -1,6 +1,6 @@
 # AWS API Gateway Module
 
-This module, sourced from `git@github.com:Pumoxi/tf_module_aws_api_gateway.git`, is designed to configure an API Gateway for an AWS Lambda function. This document provides an overview of the parameters, setup instructions, and an example usage.
+This module, sourced from `git@github.com:ksing-neo/tf_module_aws_api_gateway.git`, is designed to configure an API Gateway for an AWS Lambda function. This document provides an overview of the parameters, setup instructions, and an example usage.
 
 ## Table of Contents
 
@@ -27,9 +27,6 @@ Here are the required inputs for the module configuration:
 |---------------------|-----------------------------------------------|--------|----------|----------------------------------------|
 | `function_name`     | Name of the Lambda function                   | string | Yes      | `"my_lambda_function"`                 |
 | `region`            | AWS region where the resources will be deployed | string | Yes      | `"us-east-1"`                          |
-| `application`       | Name of the application                       | string | Yes      | `"my_app"`                             |
-| `resource_name`     | Unique identifier for the API resource        | string | Yes      | `"my_app_my_lambda_function_v1"`       |
-| `domain_name`       | Domain name for the API Gateway               | string | Yes      | `"myapp.com"`                          |
 | `lambda_invoke_arn` | ARN of the Lambda function to be invoked      | string | Yes      | `"arn:aws:lambda:us-east-1:1234567890:function:my_lambda_function"` |
 
 ## Outputs
@@ -47,50 +44,17 @@ provider "aws" {
 }
 
 module "api" {
-  source           = "git@github.com:Pumoxi/tf_module_aws_api_gateway.git//terraform"
+  source           = "git@github.com:ksing-neo/tf_module_aws_api_gateway.git//terraform"
 
-  function_name    = var.function_name
-  region           = var.region
-  application      = var.application
-  resource_name    = "${var.application}_${var.function_name}_${var.appl_version}"
-  domain_name      = "${var.application}.com"
+  function_name     = var.function_name
+  region            = var.region
   lambda_invoke_arn = aws_lambda_function.lambda.invoke_arn
+  sns_notification  = var.sns_notification
 }
 
 resource "aws_lambda_function" "lambda" {
   function_name = var.function_name
   # other lambda configuration...
-}
-```
-
-### Example Variable Definitions
-
-Define variables in `variables.tf`:
-
-```hcl
-variable "function_name" {
-  description = "Name of the Lambda function"
-  type        = string
-}
-
-variable "region" {
-  description = "AWS region where the resources will be deployed"
-  type        = string
-}
-
-variable "application" {
-  description = "Name of the application"
-  type        = string
-}
-
-variable "appl_version" {
-  description = "Version of the application"
-  type        = string
-}
-
-variable "lambda_invoke_arn" {
-  description = "ARN of the Lambda function to be invoked by API Gateway"
-  type        = string
 }
 ```
 
@@ -100,7 +64,6 @@ Define values in `terraform.tfvars`:
 function_name = "my_lambda_function"
 region = "us-east-1"
 application = "my_app"
-appl_version = "v1"
 ```
 
 ### Steps to Trigger the Module
