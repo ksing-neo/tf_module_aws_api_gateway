@@ -1,24 +1,11 @@
 resource "aws_apigatewayv2_api" "api" {
-    name = var.resource_name
+    name = var.function_name
     protocol_type = "HTTP"
-    description = "API Gateway V2 for ${var.resource_name}"
+    description = "API Gateway V2 for ${var.function_name}"
 
     tags = {
-        Application = "${var.application}"
-        Function = "${var.function_name}"
+        Application = "${var.function_name}"
     }
-}
-
-resource "aws_apigatewayv2_authorizer" "api_authorizer" {
-    name = var.resource_name
-    api_id = aws_apigatewayv2_api.api.id
-    authorizer_uri = aws_lambda_function.lambda_authorizer.invoke_arn
-    authorizer_type = "REQUEST"
-    identity_sources = ["$request.header.origin"]
-    authorizer_payload_format_version = "1.0"
-
-    # Disabling the authorization cache
-    # authorizer_result_ttl_in_seconds = 0
 }
 
 resource "aws_apigatewayv2_stage" "api" {
@@ -62,9 +49,6 @@ resource "aws_apigatewayv2_route" "api_route_POST" {
     api_id = aws_apigatewayv2_api.api.id
     route_key = "POST /${var.function_name}"
     target = "integrations/${aws_apigatewayv2_integration.api_integration.id}"
-
-    authorization_type = "CUSTOM"
-    authorizer_id = aws_apigatewayv2_authorizer.api_authorizer.id
 }
 
 resource "aws_apigatewayv2_route" "api_route_OPTIONS" {

@@ -1,8 +1,7 @@
 resource "aws_cloudwatch_log_group" "api" {
-    name = "/restapi/${var.resource_name}"
+    name = "/restapi/${var.function_name}"
 
     tags = {
-        Application = "${var.application}"
-        Function = "${var.function_name}"
+        Application = "${var.function_name}"
     }
 }

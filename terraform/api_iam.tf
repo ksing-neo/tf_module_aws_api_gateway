@@ -1,10 +1,9 @@
 resource "aws_iam_role" "iam_for_api" {
-    name = "restapi_${var.resource_name}"
+    name = "restapi_${var.function_name}"
     assume_role_policy = data.aws_iam_policy_document.iam_for_api_assume.json
 
     tags = {
-        Application = "${var.application}"
-        Function = "${var.function_name}"
+        Application = "${var.function_name}"
     }
 }
 
@@ -40,7 +39,7 @@ data "aws_iam_policy_document" "iam_for_api_role" {
 }
 
 resource "aws_iam_role_policy" "iam_for_api" {
-  name   = "restapi_${var.resource_name}"
+  name   = "restapi_${var.function_name}"
   role   = aws_iam_role.iam_for_api.id
   policy = data.aws_iam_policy_document.iam_for_api_role.json
 }

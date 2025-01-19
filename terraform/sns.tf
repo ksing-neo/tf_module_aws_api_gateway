@@ -1,10 +1,9 @@
 resource "aws_sns_topic" "sns" {
-    name = var.resource_name
+    name = var.function_name
     kms_master_key_id = "alias/aws/sns"
 
     tags = {
-        Application = "${var.application}"
-        Function = "${var.function_name}"
+        Application = "${var.function_name}"
     }
 }
 
